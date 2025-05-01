@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+// import Navbar from "@/components/layout/Navbar";
+// import Footer from "@/components/layout/Footer";
 import InternationalHeader from "@/components/international/InternationalHeader";
 import InternationalNewsList from "@/components/international/InternationalNewsList";
 import InternationalVideoSection from "@/components/international/InternationalVideoSection";
@@ -49,7 +49,7 @@ const International = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <main className="container mx-auto px-4 py-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -102,7 +102,7 @@ const International = () => {
           </div>
         </motion.div>
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

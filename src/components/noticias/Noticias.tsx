@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+// import Navbar from "@/components/layout/Navbar";
+// import Footer from "@/components/layout/Footer";
 import { PageTransition } from "@/utils/animations";
 import LazyImage from "@/components/ui/LazyImage";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
@@ -25,11 +25,11 @@ const NewsDetail: React.FC = () => {
     return (
       <PageTransition>
         <div className="min-h-screen flex flex-col">
-          <Navbar />
+          {/* <Navbar /> */}
           <main className="flex-grow pt-20 flex justify-center items-center">
             <div>Loading article...</div>
           </main>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </PageTransition>
     );
@@ -39,11 +39,11 @@ const NewsDetail: React.FC = () => {
     return (
       <PageTransition>
         <div className="min-h-screen flex flex-col">
-          <Navbar />
+          {/* <Navbar /> */}
           <main className="flex-grow pt-20 flex justify-center items-center">
             <div>Error: {error || "Article not found"}</div>
           </main>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </PageTransition>
     );
@@ -52,7 +52,7 @@ const NewsDetail: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         <main className="flex-grow pt-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
             <h1 className="text-3xl font-bold font-display">{article.title}</h1>
@@ -126,7 +126,7 @@ const NewsDetail: React.FC = () => {
           </div>
           <TwitterNews />
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     
     </PageTransition>

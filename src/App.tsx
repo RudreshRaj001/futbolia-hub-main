@@ -9,6 +9,8 @@ import { store } from './store';
 
 // Lazy-loading HOC
 import LazyLoadingHOC from '@/components/LazyLoadingHOC';
+import Navbar from './components/layout/Navbar';
+import Footer from "@/components/layout/Footer";
 
 // Lazy-loaded page components
 const Home = LazyLoadingHOC(() => import('./pages/Home'));
@@ -20,7 +22,7 @@ const Libertadores = LazyLoadingHOC(() => import('./pages/Libertadores'));
 const Sudamericana = LazyLoadingHOC(() => import('./pages/Sudamericana'));
 const International = LazyLoadingHOC(() => import('./pages/International'));
 const Signings = LazyLoadingHOC(() => import('./pages/Signings'));
-const News = LazyLoadingHOC(() => import('./pages/News'));
+// const News = LazyLoadingHOC(() => import('./pages/News'));
 const Noticias = LazyLoadingHOC(() => import('@/components/noticias/Noticias'));
 const FeaturedAllNews = LazyLoadingHOC(() => import('@/components/home/FeaturedAllNews'));
 const Abroad = LazyLoadingHOC(() => import('./pages/Abroad'));
@@ -36,8 +38,8 @@ const NotFound = LazyLoadingHOC(() => import('./pages/NotFound'));
 
 // Calendar pages
 const CalendarPage = LazyLoadingHOC(() => import('@/components/calendar/CalendarPage'));
-const SerieACalendar = LazyLoadingHOC(() => import('./pages/SerieACalendar'));
-const SerieBCalendar = LazyLoadingHOC(() => import('./pages/SerieBCalendar'));
+// const SerieACalendar = LazyLoadingHOC(() => import('./pages/SerieACalendar'));
+// const SerieBCalendar = LazyLoadingHOC(() => import('./pages/SerieBCalendar'));
 const LibertadoresCalendar = LazyLoadingHOC(() => import('./pages/LibertadoresCalendar'));
 const SudamericanaCalendar = LazyLoadingHOC(() => import('./pages/SudamericanaCalendar'));
 
@@ -51,6 +53,7 @@ const queryClient = new QueryClient();
 
 const App: React.FC = () => (
   <ReduxProvider store={store}>
+    <Navbar />
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <AnimatePresence mode="wait">
         <Toaster />
@@ -79,7 +82,7 @@ const App: React.FC = () => (
             <Route path="/internacional" element={<International />} />
             <Route path="/fichajes" element={<Signings />} />
             <Route path="/noticias" element={<FeaturedAllNews />} />
-            <Route path="/noticias/:newsId" element={<News />} />
+            {/* <Route path="/noticias/:newsId" element={<News />} /> */}
             <Route path="/noticias/slug/:newsSlug" element={<Noticias />} />
             <Route path="/extranjero" element={<Abroad />} />
             <Route path="/equipos" element={<Teams />} />
@@ -105,6 +108,7 @@ const App: React.FC = () => (
         </QueryClientProvider>
       </AnimatePresence>
     </ThemeProvider>
+    <Footer />
   </ReduxProvider>
 );
 

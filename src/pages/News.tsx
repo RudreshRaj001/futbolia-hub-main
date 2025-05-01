@@ -1,8 +1,8 @@
 
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
 import { news } from '@/data';
@@ -18,7 +18,7 @@ const News: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         
         <main className="flex-grow pt-20">
           {/* Header */}
@@ -109,7 +109,7 @@ const News: React.FC = () => {
           </div>
         </main>
         
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+// import Navbar from "@/components/layout/Navbar";
+// import Footer from "@/components/layout/Footer";
 import { PageTransition } from "@/utils/animations";
 import { AdSection } from "@/components/home/AdSections";
-import { Separator } from "@/components/ui/separator";
-import LazyImage from "@/components/ui/LazyImage";
-import PlayerSigningCard from "@/components/signings/PlayerSigningCard";
+// import { Separator } from "@/components/ui/separator";
+// import LazyImage from "@/components/ui/LazyImage";
+// import PlayerSigningCard from "@/components/signings/PlayerSigningCard";
 import LatestSignings from "@/components/signings/LatestSignings";
 import VideoSection from "@/components/signings/VideoSection";
 import TeamTransfers from "@/components/signings/TeamTransfers";
@@ -28,7 +28,7 @@ const Signings: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main className="flex-grow  pt-20">
           {/* Top Banner Advertisement */}
@@ -102,7 +102,7 @@ const Signings: React.FC = () => {
           <AdSection position="bottom" />
         </main>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+// import Navbar from "@/components/layout/Navbar";
+// import Footer from "@/components/layout/Footer";
 import LazyImage from "@/components/ui/LazyImage";
 import Advertisement from "@/components/ads/Advertisement";
 import { PageTransition } from "@/utils/animations";
@@ -26,11 +26,11 @@ const SerieB: React.FC = () => {
     return (
       <PageTransition>
         <div className="min-h-screen flex flex-col">
-          <Navbar />
+          {/* <Navbar /> */}
           <main className="flex-grow pt-20 flex justify-center items-center">
             <div>Loading news...</div>
           </main>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </PageTransition>
     );
@@ -40,11 +40,11 @@ const SerieB: React.FC = () => {
     return (
       <PageTransition>
         <div className="min-h-screen flex flex-col">
-          <Navbar />
+          {/* <Navbar /> */}
           <main className="flex-grow pt-20 flex justify-center items-center">
             <div>Error: {error}</div>
           </main>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </PageTransition>
     );
@@ -58,7 +58,7 @@ const SerieB: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         <main className="flex-grow pt-20">
           {/* Page Header */}
           <div className="w-full bg-primary text-white">
@@ -192,7 +192,7 @@ const SerieB: React.FC = () => {
             </div>
           </div>
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

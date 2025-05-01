@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import { Link } from 'react-router-dom';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import StandingsTable from '@/components/standings/StandingsTable';
 import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
@@ -26,7 +26,7 @@ const Standings: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         
         <main className="flex-grow pt-20">
           {/* Header */}
@@ -84,7 +84,7 @@ const Standings: React.FC = () => {
           </div>
         </main>
         
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

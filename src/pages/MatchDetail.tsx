@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import { PageTransition } from '@/utils/animations';
 import SEO from '@/utils/seo';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -50,11 +50,11 @@ const MatchDetail: React.FC = () => {
   if (loading || !match) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="flex-grow flex items-center justify-center">
           <div className="text-xl">Cargando...</div>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }
@@ -66,7 +66,7 @@ const MatchDetail: React.FC = () => {
         description="Datos, estadísticas, y alineaciones del partido."
       />
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         <main className="flex-grow pt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Match Header */}
@@ -179,7 +179,7 @@ const MatchDetail: React.FC = () => {
             </div>
           </div>
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
 import FixtureCalendar from '@/components/calendar/FixtureCalendar';
@@ -49,7 +49,7 @@ const Abroad: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main className="flex-grow pt-20">
           {/* Banner Ad */}
@@ -126,7 +126,7 @@ const Abroad: React.FC = () => {
           </div>
         </main>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

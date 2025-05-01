@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
 import TournamentsContent from '@/components/tournaments/TournamentsContent';
@@ -10,7 +10,7 @@ const Tournaments: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         
         <main className="flex-grow pt-20">
           {/* Page Header */}
@@ -33,7 +33,7 @@ const Tournaments: React.FC = () => {
           </div>
         </main>
         
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

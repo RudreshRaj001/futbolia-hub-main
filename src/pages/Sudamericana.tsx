@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+// import Navbar from "@/components/layout/Navbar";
+// import Footer from "@/components/layout/Footer";
 import Advertisement from "@/components/ads/Advertisement";
 import { PageTransition } from "@/utils/animations";
 import SudamericanaHeader from "@/components/sudamericana/SudamericanaHeader";
@@ -22,7 +22,7 @@ const Sudamericana: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main className="flex-grow pt-20">
           {/* Banner Ad */}
@@ -63,7 +63,7 @@ const Sudamericana: React.FC = () => {
           </div>
         </main>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

@@ -6,8 +6,8 @@ import LazyImage from "@/components/ui/LazyImage";
 import { motion } from "framer-motion";
 import { RootState, AppDispatch } from "@/store";
 import { fetchTopTrendingNews } from "@/store/slices/newsSlice";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+// import Navbar from "@/components/layout/Navbar";
+// import Footer from "@/components/layout/Footer";
 import { PageTransition } from "@/utils/animations";
 
 const trendingKeywords = [
@@ -31,7 +31,7 @@ const FeaturedAllNews: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main className="flex-grow">
           {status === "loading" && (
@@ -112,7 +112,7 @@ const FeaturedAllNews: React.FC = () => {
           )}
         </main>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

@@ -1,93 +1,93 @@
-
 import React, { useEffect } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
 import FixtureCalendar from '@/components/calendar/FixtureCalendar';
 import { useAppSelector } from '@/store/hooks';
 
+// Props interface for flexible reuse across different league calendar pages
 interface CalendarPageProps {
   title: string;
   defaultCompetition: string;
   competitions?: string[];
 }
 
+// Functional component with default prop values
 const CalendarPage: React.FC<CalendarPageProps> = ({ 
   title, 
   defaultCompetition,
   competitions = ["Liga Pro", "Serie B", "Libertadores", "Sudamericana"]
 }) => {
-    const { leagueName } = useAppSelector(s => s.leagueInfo);
+  const { leagueName } = useAppSelector(s => s.leagueInfo);
+
   useEffect(() => {
-    // Scroll to top when component mounts
+    // Automatically scroll to top when league changes (or page mounts)
     window.scrollTo(0, 0);
   }, [leagueName]);
 
-  title = leagueName || "Liga Pro";
-  defaultCompetition = leagueName || "Liga Pro";
-
+  // Dynamically override title and defaultCompetition if league name is available
+  const resolvedTitle = leagueName || title;
+  const resolvedCompetition = leagueName || defaultCompetition;
 
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* Top Navigation */}
+        {/* <Navbar /> */}
         
         <main className="flex-grow pt-20">
-          {/* Page Header */}
+          {/* Page Heading */}
           <div className="w-full bg-primary text-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-              <h1 className="text-2xl font-bold font-display">{title} - Calendar</h1>
+              <h1 className="text-2xl font-bold font-display">{resolvedTitle} - Calendar</h1>
             </div>
           </div>
 
-          {/* Banner Ad */}
+          {/* Banner Ad Section */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <Advertisement size="banner" />
           </div>
 
-          {/* Calendar Content with Side Ads */}
+          {/* Main Grid Layout: Calendar + Sidebars */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-              {/* Left Side Ad - Hidden on mobile */}
+              
+              {/* Left Sidebar Ad (Sticky, only on desktop) */}
               <div className="hidden lg:block">
                 <div className="sticky top-24">
                   <Advertisement size="sidebar" />
                 </div>
               </div>
 
-              {/* Main content area - 3/5 width on desktop */}
+              {/* Main Content Area (Calendar) */}
               <div className="lg:col-span-3">
                 <FixtureCalendar 
                   competitions={competitions}
-                  defaultCompetition={defaultCompetition}
+                  defaultCompetition={resolvedCompetition}
                   className="w-full"
                 />
-                
-               
-                
-                {/* Mobile Ad - Shown between content on mobile only */}
+
+                {/* Inline Ad visible only on mobile screens */}
                 <div className="mt-6 lg:hidden">
                   <Advertisement size="inline" />
                 </div>
               </div>
 
-              {/* Right Side Ad - 1/5 width on desktop */}
+              {/* Right Sidebar Ad (Sticky) */}
               <div className="lg:col-span-1">
                 <div className="space-y-6">
-                  {/* Advertisement - Sidebar */}
                   <div className="sticky top-24">
                     <Advertisement size="sidebar" />
                   </div>
-                  
-                
                 </div>
               </div>
             </div>
           </div>
         </main>
-        
-        <Footer />
+
+        {/* Footer Section */}
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

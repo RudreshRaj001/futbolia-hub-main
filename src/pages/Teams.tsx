@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
 import TeamCard from '@/components/teams/TeamCard';
@@ -45,7 +45,7 @@ const Teams: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         <main className="flex-grow pt-20">
 
           {/* Header and Dropdown */}
@@ -117,7 +117,7 @@ const Teams: React.FC = () => {
           </div>
 
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+// import Navbar from "@/components/layout/Navbar";
+// import Footer from "@/components/layout/Footer";
 import { PageTransition } from "@/utils/animations";
 import { AdSection } from "@/components/home/AdSections";
-import NationalTeamHeader from "@/components/national-team/NationalTeamHeader";
+// import NationalTeamHeader from "@/components/national-team/NationalTeamHeader";
 import NationalTeamNews from "@/components/national-team/NationalTeamNews";
 import NationalTeamVideo from "@/components/national-team/NationalTeamVideo";
-import NationalTeamStandings from "@/components/national-team/NationalTeamStandings";
-import NationalTeamCalendar from "@/components/national-team/NationalTeamCalendar";
-import LatestNationalTeamNews from "@/components/national-team/LatestNationalTeamNews";
-import OlderNationalTeamNews from "@/components/national-team/OlderNationalTeamNews";
+// import NationalTeamStandings from "@/components/national-team/NationalTeamStandings";
+// import NationalTeamCalendar from "@/components/national-team/NationalTeamCalendar";
+// import LatestNationalTeamNews from "@/components/national-team/LatestNationalTeamNews";
+// import OlderNationalTeamNews from "@/components/national-team/OlderNationalTeamNews";
 import { useAppDispatch, useAppSelector } from "@/store/hooks"; // Assuming you use Redux for state management
 import {
   fetchTournaments,
   fetchTournamentStandings,
 } from "@/store/slices/tournamentsSlice"; // Redux actions
 import StandingsTable from "@/components/abroad/StandingsTable";
-import CalendarStandingsSection from "@/components/home/CalendarStandingsSection";
+// import CalendarStandingsSection from "@/components/home/CalendarStandingsSection";
 import FixtureCalendar from "@/components/calendar/FixtureCalendar";
 
 const NationalTeam: React.FC = () => {
@@ -52,7 +52,7 @@ const NationalTeam: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main className="flex-grow pt-20">
           {/* Top Banner Advertisement */}
@@ -157,7 +157,7 @@ const NationalTeam: React.FC = () => {
           <AdSection position="bottom" />
         </main>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </PageTransition>
   );
 };

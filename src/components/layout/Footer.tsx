@@ -6,7 +6,7 @@ import Logo from '../ui/Logo';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-gray-900 text-gray-300 ">
       <div className="responsive-container py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       

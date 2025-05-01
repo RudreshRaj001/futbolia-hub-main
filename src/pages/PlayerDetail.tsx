@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import { PageTransition } from '@/utils/animations';
 import SEO from '@/utils/seo';
 import PlayerProfile from '@/components/players/PlayerProfile';
@@ -153,7 +153,7 @@ const PlayerDetail: React.FC = () => {
         image={selectedPlayer?.photo}
       />
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main className="flex-grow pt-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -191,7 +191,7 @@ const PlayerDetail: React.FC = () => {
           </div>
         </main>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

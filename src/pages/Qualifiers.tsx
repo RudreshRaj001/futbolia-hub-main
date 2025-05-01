@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import { PageTransition } from '@/utils/animations';
 import { AdSection } from '@/components/home/AdSections';
 import QualifiersHeader from '@/components/qualifiers/QualifiersHeader';
@@ -10,7 +10,7 @@ import QualifiersStandings from '@/components/qualifiers/QualifiersStandings';
 import QualifiersSchedule from '@/components/qualifiers/QualifiersSchedule';
 import QualifiersTopScorers from '@/components/qualifiers/QualifiersTopScorers';
 import QualifiersVideoSection from '@/components/qualifiers/QualifiersVideoSection';
-import QualifiersCompareSection from '@/components/qualifiers/QualifiersCompareSection';
+// import QualifiersCompareSection from '@/components/qualifiers/QualifiersCompareSection';
 import QualifiersUpcomingMatches from '@/components/qualifiers/QualifiersUpcomingMatches';
 import TeamCompare from '@/components/tournaments/team/TeamCompare';
 
@@ -23,7 +23,7 @@ const Qualifiers: React.FC = () => {
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         
         <main className="flex-grow  pt-20">
           {/* Top Banner Advertisement */}
@@ -85,7 +85,7 @@ const Qualifiers: React.FC = () => {
           <AdSection position="bottom" />
         </main>
         
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

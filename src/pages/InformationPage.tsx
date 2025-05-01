@@ -1,8 +1,8 @@
 
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import SEO from '@/utils/seo';
 import { PageTransition } from '@/utils/animations';
 
@@ -183,7 +183,7 @@ const InformationPage: React.FC<InformationPageProps> = ({ pageId: propPageId })
         description={`${currentPage.title} - Portal de noticias del fútbol ecuatoriano`}
       />
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         
         <main className="flex-grow pt-20">
           {/* Header */}
@@ -204,7 +204,7 @@ const InformationPage: React.FC<InformationPageProps> = ({ pageId: propPageId })
           </div>
         </main>
         
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

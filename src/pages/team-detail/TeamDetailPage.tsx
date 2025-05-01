@@ -6,8 +6,8 @@ import { AdSection } from '@/components/home/AdSections';
 import TeamIconSlider from '@/components/teams/TeamIconSlider';
 import TeamDetailTabs from '@/pages/team-detail/components/TeamDetailTabs';
 import TeamBanner from '@/components/team-detail/TeamBanner';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import SEO from '@/utils/seo';
 import { useToast } from '@/hooks/use-toast';
 import { fetchTeamById, clearTeamState } from '@/store/slices/teamSlice';
@@ -55,11 +55,11 @@ const TeamDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="flex-grow flex items-center justify-center">
           <Loader />
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }
@@ -68,11 +68,11 @@ const TeamDetailPage: React.FC = () => {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="flex-grow flex items-center justify-center">
           <div className="text-xl text-red-500">Error: {error}</div>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }
@@ -81,11 +81,11 @@ const TeamDetailPage: React.FC = () => {
   if (!team) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="flex-grow flex items-center justify-center">
           <div className="text-xl">Equipo no encontrado</div>
         </div>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }
@@ -105,7 +105,7 @@ const TeamDetailPage: React.FC = () => {
       
       {/* Page Layout */}
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         
         <main className="flex-grow pt-16">
           {/* Team Icons Slider */}
@@ -131,7 +131,7 @@ const TeamDetailPage: React.FC = () => {
           <AdSection position="bottom" />
         </main>
         
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

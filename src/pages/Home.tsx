@@ -1,45 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import FeaturedNews from "@/components/home/FeaturedNews";
-import LatestResults from "@/components/home/LatestResults";
 import ImageSlider from "@/components/home/ImageSlider";
-import { PageTransition } from "@/utils/animations";
 import WelcomeSection from "@/components/home/WelcomeSection";
-import CalendarStandingsSection from "@/components/home/CalendarStandingsSection";
-import TeamsScorersSection from "@/components/home/TeamsScorersSection";
+import { PageTransition } from "@/utils/animations";
 import { AdSection } from "@/components/home/AdSections";
 import MatchCards from "@/components/home/MatchCards";
 import TeamIconSlider from "@/components/teams/TeamIconSlider";
 import { fetchTournaments } from "@/store/slices/tournamentsSlice";
+import { fetchTeams } from "@/store/slices/teamSlice";
 import { useAppDispatch } from "@/store/hooks";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
-import { fetchTeams } from "@/store/slices/teamSlice";
+
+// Lazy-loaded components
+const FeaturedNews = lazy(() => import("@/components/home/FeaturedNews"));
+const CalendarStandingsSection = lazy(() => import("@/components/home/CalendarStandingsSection"));
+const TeamsScorersSection = lazy(() => import("@/components/home/TeamsScorersSection"));
+
+const currentYear = new Date().getFullYear();
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
   const { teams } = useSelector((state: RootState) => state.teams);
-  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
     dispatch(fetchTournaments());
-  }, [dispatch]);
 
-  useEffect(() => {
     if (!teams.length) {
       dispatch(fetchTeams({ league: 242, season: currentYear }));
     }
-  }, [dispatch, teams, currentYear]);
+  }, [dispatch, teams]);
 
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
         <TeamIconSlider />
         <main className="flex-grow">
           <section>
@@ -54,14 +51,16 @@ const Home: React.FC = () => {
           <WelcomeSection />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <FeaturedNews />
-            <AdSection position="middle" />
-            <CalendarStandingsSection />
-            <TeamsScorersSection teams={teams} />
+            <Suspense fallback={<div>Loading sections…</div>}>
+              <FeaturedNews />
+              <AdSection position="middle" />
+              <CalendarStandingsSection />
+              <TeamsScorersSection teams={teams} />
+            </Suspense>
             <AdSection position="bottom" />
           </div>
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

@@ -1,49 +1,40 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
+// import Navbar from '@/components/layout/Navbar';
+// import Footer from '@/components/layout/Footer';
 import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
 import TournamentsContent from '@/components/tournaments/TournamentsContent';
-import { reverseRouteMap } from '@/utils/tournamentRoutes';
-// import { mockTournaments } from '@/components/tournaments/mockData';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { RootState } from '@/store';
-import { useSelector } from 'react-redux';
 import { fetchTeams } from '@/store/slices/teamSlice';
 
 const TournamentPage: React.FC = () => {
   const { tournamentId, section } = useParams<{ tournamentId: string; section?: string }>();
-  // const { teams, loading, error } = useSelector((state: RootState) => state.teams);
-  
-  // Get tournaments from Redux store with fallback to mock data
-  const combinedTournaments = useAppSelector((state: RootState) => state.tournaments.combinedTournaments);
 
   const dispatch = useAppDispatch();
-  // Get the tournament name from the ID for display
-  // const internalId = tournamentId ? reverseRouteMap[tournamentId] : '';
+
+  // ✅ Use typed selector for tournament data
+  const combinedTournaments = useAppSelector((state: RootState) => state.tournaments.combinedTournaments);
   const currentYear = new Date().getFullYear();
 
-  
-  
-  // First try to find by numeric ID in combined tournaments, then try with internal ID
-  const tournament = combinedTournaments.find(t => t.id === tournamentId);
+  // ✅ Robust fallback handling for tournament data
+  const tournament = combinedTournaments.find(t => String(t.id) === tournamentId); // Convert ID to string to match route param
   const tournamentName = tournament?.name || 'Torneos';
   const tournamentSeason = tournament?.season || currentYear;
 
- 
   useEffect(() => {
-    // if (!teams.length) {
-     
-      dispatch(fetchTeams({ league: +tournamentId ||242, season: tournamentSeason }));
-      // }
-    }, [dispatch,tournamentId]);
+    // ✅ Only fetch teams if valid tournamentId is present
+    if (tournamentId && !isNaN(Number(tournamentId))) {
+      dispatch(fetchTeams({ league: Number(tournamentId), season: tournamentSeason }));
+    }
+  }, [dispatch, tournamentId, tournamentSeason]); // ✅ Correct dependency array
 
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
-        
+        {/* <Navbar /> */}
+
         <main className="flex-grow pt-20">
           {/* Page Header */}
           <div className="w-full bg-primary text-white">
@@ -64,8 +55,8 @@ const TournamentPage: React.FC = () => {
             </div>
           </div>
         </main>
-        
-        <Footer />
+
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

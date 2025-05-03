@@ -24,21 +24,21 @@ const NationalTeam: React.FC = () => {
   const tournaments = useAppSelector((state) => state.tournaments.tournaments); // Fetch tournaments from Redux store
   const standings = useAppSelector((state) => state.tournaments.standings); // Fetch standings from Redux store
   const [activeTab, setActiveTab] = useState<string>("242"); // Default to the first tournament (e.g., Liga Pro)
-  const [season, setSeason] = useState<any>(2025); // Default season
+  const [season, setSeason] = useState<number>(2025); // Default season
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    dispatch(fetchTournaments()); // Fetch tournaments data
+    window.scrollTo(0, 0); // Scroll to top on mount
+    dispatch(fetchTournaments()); // Fetch all tournaments
   }, [dispatch]);
 
   useEffect(() => {
     if (activeTab) {
-      // dispatch(fetchTournamentStandings(activeTab)); // Fetch standings based on the selected tournament
-      dispatch(fetchTournamentStandings({ tournamentId: activeTab, season: season }))
+      // Fetch standings for the selected tournament and season
+      dispatch(fetchTournamentStandings({ tournamentId: activeTab, season }));
     }
-  }, [activeTab, dispatch]);
+  }, [activeTab, season, dispatch]); // Include season in deps for accuracy
 
-  // Map the API standings data to match the TeamStanding format
+  // Transform standings API data to a shape suitable for StandingsTable
   const mappedStandings = standings.map((team) => ({
     position: team.position,
     name: team.team.name,
@@ -69,6 +69,7 @@ const NationalTeam: React.FC = () => {
           </div>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Page Title */}
             <div className="bg-gray-900 text-white p-4 rounded-md mb-6">
               <h1 className="text-2xl font-bold">National Team</h1>
             </div>
@@ -91,7 +92,7 @@ const NationalTeam: React.FC = () => {
 
               {/* Sidebar Area (1/3 width on desktop) */}
               <div className="space-y-8">
-                {/* Ad section */}
+                {/* Sidebar Ad */}
                 <div className="bg-gray-100 p-4 rounded-md">
                   <div className="bg-white rounded-md overflow-hidden">
                     <img
@@ -102,26 +103,24 @@ const NationalTeam: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Video of the day section */}
+                {/* Video of the Day Section */}
                 <NationalTeamVideo />
 
-                {/* Calendar section */}
+                {/* Calendar Section */}
                 {/* <NationalTeamCalendar /> */}
-
-                {/* Two Column Layout for Calendar and Standings */}
                 <FixtureCalendar className="h-full" />
 
-                {/* Standings section */}
+                {/* Standings Header */}
                 <div className="bg-gray-900 text-white p-4">
                   <h2 className="text-lg font-bold">Standings</h2>
                 </div>
 
-                {/* Tournament Tabs */}
+                {/* Tournament Tabs for Selecting Standings */}
                 <div className="flex space-x-2 py-2 overflow-x-auto scrollbar-hide">
                   {tournaments.map((tournament) => (
                     <button
                       key={tournament.id}
-                      onClick={() =>{
+                      onClick={() => {
                         setActiveTab(tournament.id.toString());
                         setSeason(tournament.season);
                       }}
@@ -136,10 +135,10 @@ const NationalTeam: React.FC = () => {
                   ))}
                 </div>
 
-                {/* Use the dynamic StandingsTable */}
+                {/* Standings Table */}
                 <StandingsTable standings={mappedStandings} />
 
-                {/* Advertisement */}
+                {/* Bottom Sidebar Advertisement */}
                 <div className="bg-gray-100 p-4 rounded-md">
                   <div className="bg-white rounded-md overflow-hidden">
                     <img

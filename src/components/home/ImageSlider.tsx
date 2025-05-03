@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { RootState, AppDispatch } from "@/store";
 import { fetchTopTrendingNews } from "@/store/slices/newsSlice";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import {
   Carousel,
   CarouselContent,
@@ -23,6 +24,93 @@ const trendingKeywords = [
   "LigaPro",
   "Selección",
 ];
+
+// Animation variants for better performance
+const slideVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (custom: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, delay: custom * 0.1 }
+  })
+};
+
+// Use will-change property to optimize GPU usage
+const willChangeStyles = {
+  willChange: 'transform, opacity'
+};
+
+const SliderItem = memo(({ item, index, isPriority }: any) => (
+  <CarouselItem key={item._id}>
+    <div className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
+      <div className="absolute inset-0 bg-cover bg-center">
+        <ResponsiveImage 
+          src={item.imageUrls[0]} 
+          alt={item.title}
+          width={1920}
+          height={1080}
+          priority={isPriority}
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-start p-6 md:p-16">
+        <div className="max-w-4xl">
+          <motion.div
+            variants={slideVariants}
+            initial="hidden"
+            animate="visible"
+            custom={0}
+            style={willChangeStyles}
+          >
+            <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary text-white mb-4">
+              Destacado
+            </span>
+          </motion.div>
+
+          <motion.h2
+            variants={slideVariants}
+            initial="hidden"
+            animate="visible"
+            custom={1}
+            style={willChangeStyles}
+            className="text-3xl md:text-5xl font-bold text-white mb-4 font-display"
+          >
+            {item.title}
+          </motion.h2>
+
+          <motion.p
+            variants={slideVariants}
+            initial="hidden"
+            animate="visible"
+            custom={2}
+            style={willChangeStyles}
+            className="text-lg md:text-xl text-white/80 mb-6 max-w-2xl"
+          >
+            {item.summary ||
+              item.description ||
+              "Lee más sobre esta historia destacada."}
+          </motion.p>
+
+          <motion.div
+            variants={slideVariants}
+            initial="hidden"
+            animate="visible"
+            custom={3}
+            style={willChangeStyles}
+          >
+            <Link to={`/noticias/slug/${item.slug}`}>
+              <Button className="bg-primary text-white hover:bg-primary/90">
+                Leer más <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  </CarouselItem>
+));
 
 const ImageSlider: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -56,83 +144,43 @@ const ImageSlider: React.FC = () => {
     if (!api) return;
     api.on("select", onSlideChange);
 
-    const autoplay = setInterval(() => {
-      if (api.canScrollNext()) {
-        api.scrollNext();
-      } else {
-        api.scrollTo(0);
+    // Use requestAnimationFrame for smoother animation timing
+    let animationId: number;
+    let lastSlideTime = performance.now();
+
+    const animateSlider = (currentTime: number) => {
+      if (currentTime - lastSlideTime > 5000) { // 5 seconds interval
+        if (api.canScrollNext()) {
+          api.scrollNext();
+        } else {
+          api.scrollTo(0);
+        }
+        lastSlideTime = currentTime;
       }
-    }, 5000);
+      animationId = requestAnimationFrame(animateSlider);
+    };
+
+    animationId = requestAnimationFrame(animateSlider);
 
     return () => {
       api.off("select", onSlideChange);
-      clearInterval(autoplay);
+      cancelAnimationFrame(animationId);
     };
   }, [api, onSlideChange]);
 
   if (sortedArticles.length === 0) return null;
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full will-change-transform">
       <Carousel className="w-full" opts={{ loop: true }} setApi={setApi}>
         <CarouselContent>
-          {sortedArticles.map((item) => (
-            <CarouselItem key={item._id}>
-              <div className="relative h-[500px] md:h-[600px] w-full overflow-hidden">
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${item.imageUrls[0]})` }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                </div>
-
-                <div className="absolute inset-0 flex items-center justify-start p-6 md:p-16">
-                  <div className="max-w-4xl">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-primary text-white mb-4">
-                        Destacado
-                      </span>
-                    </motion.div>
-
-                    <motion.h2
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.1 }}
-                      className="text-3xl md:text-5xl font-bold text-white mb-4 font-display"
-                    >
-                      {item.title}
-                    </motion.h2>
-
-                    <motion.p
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                      className="text-lg md:text-xl text-white/80 mb-6 max-w-2xl"
-                    >
-                      {item.summary ||
-                        item.description ||
-                        "Lee más sobre esta historia destacada."}
-                    </motion.p>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.3 }}
-                    >
-                      <Link to={`/noticias/slug/${item.slug}`}>
-                        <Button className="bg-primary text-white hover:bg-primary/90">
-                          Leer más <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
-                      </Link>
-                    </motion.div>
-                  </div>
-                </div>
-              </div>
-            </CarouselItem>
+          {sortedArticles.map((item, index) => (
+            <SliderItem 
+              key={item._id} 
+              item={item} 
+              index={index} 
+              isPriority={index === 0} 
+            />
           ))}
         </CarouselContent>
 
@@ -158,4 +206,4 @@ const ImageSlider: React.FC = () => {
   );
 };
 
-export default ImageSlider;
+export default memo(ImageSlider);

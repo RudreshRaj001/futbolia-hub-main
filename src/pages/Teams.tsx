@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 // import Navbar from '@/components/layout/Navbar';
 // import Footer from '@/components/layout/Footer';
-import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
-import TeamCard from '@/components/teams/TeamCard';
 import { fetchTeams } from '@/store/slices/teamSlice';
 import { fetchTournaments } from '@/store/slices/tournamentsSlice';
 import { ApiTournament } from '@/store/slices/tournamentsSlice';
+
+// ✅ Lazy-loaded components
+const TeamCard = lazy(() => import('@/components/teams/TeamCard'));
+const Advertisement = lazy(() => import('@/components/ads/Advertisement'));
 
 const Teams: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -47,75 +49,76 @@ const Teams: React.FC = () => {
       <div className="min-h-screen flex flex-col">
         {/* <Navbar /> */}
         <main className="flex-grow pt-20">
-
-          {/* Header and Dropdown */}
+          {/* Header */}
           <section className="bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-900 py-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex flex-col items-center text-center">
-                <h1 className="text-3xl md:text-4xl font-bold font-display tracking-tight mb-4">
-                  Equipos
-                </h1>
-                <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl">
-                  Selecciona torneo y consulta sus equipos.
-                </p>
-                <div className="mt-4">
-                  {!tournaments.length && tourLoading && (
-                    <p>Loading tournaments...</p>
-                  )}
-                  {tourError && !tournaments.length && (
-                    <p className="text-red-500">Error: {tourError}</p>
-                  )}
-                  {tournaments.length > 0 && (
-                    <select
-                      value={selectedTournament ? `${selectedTournament.id}-${selectedTournament.season}` : ''}
-                      onChange={handleSelectChange}
-                      disabled={tourLoading}
-                      className="border rounded p-2 text-base"
-                    >
-                      {tournaments.map(t => (
-                        <option key={`${t.id}-${t.season}`} value={`${t.id}-${t.season}`}>
-                          {t.name} - {t.season}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+              <h1 className="text-3xl md:text-4xl font-bold font-display tracking-tight mb-4">
+                Equipos
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                Selecciona torneo y consulta sus equipos.
+              </p>
+              <div className="mt-4">
+                {tourLoading && !tournaments.length && <p>Loading tournaments...</p>}
+                {tourError && !tournaments.length && <p className="text-red-500">Error: {tourError}</p>}
+                {tournaments.length > 0 && (
+                  <select
+                    value={selectedTournament ? `${selectedTournament.id}-${selectedTournament.season}` : ''}
+                    onChange={handleSelectChange}
+                    disabled={tourLoading}
+                    className="border rounded p-2 text-base"
+                  >
+                    {tournaments.map(t => (
+                      <option key={`${t.id}-${t.season}`} value={`${t.id}-${t.season}`}>
+                        {t.name} - {t.season}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
             </div>
           </section>
 
           {/* Banner Ad */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <Advertisement size="banner" />
+            <Suspense fallback={<div className="text-sm text-center">Cargando banner...</div>}>
+              <Advertisement size="banner" />
+            </Suspense>
           </div>
 
           {/* Teams Grid */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {(teamLoading) ? (
+            {teamLoading ? (
               <p className="text-center">Loading teams...</p>
             ) : teamError ? (
               <p className="text-center text-red-500">Error: {teamError}</p>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                {/* Main team cards */}
                 <div className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                  {teams.map(team => (
-                    <TeamCard
-                      key={team.id}
-                      id={team.id}
-                      name={team.name}
-                      logo={team.logo}
-                      city={team.city}
-                      founded={team.founded}
-                    />
-                  ))}
+                  <Suspense fallback={<div className="text-center col-span-full">Loading teams...</div>}>
+                    {teams.map(team => (
+                      <TeamCard
+                        key={team.id}
+                        id={team.id}
+                        name={team.name}
+                        logo={team.logo}
+                        city={team.city}
+                        founded={team.founded}
+                      />
+                    ))}
+                  </Suspense>
                 </div>
+
+                {/* Sidebar Ad */}
                 <div className="lg:col-span-1">
-                  <Advertisement size="sidebar" />
+                  <Suspense fallback={<div className="text-sm text-center">Cargando anuncio...</div>}>
+                    <Advertisement size="sidebar" />
+                  </Suspense>
                 </div>
               </div>
             )}
           </div>
-
         </main>
         {/* <Footer /> */}
       </div>

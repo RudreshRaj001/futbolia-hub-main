@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
-import LazyImage from "@/components/ui/LazyImage";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import { motion } from "framer-motion";
 import { RootState, AppDispatch } from "@/store";
 import { fetchTopTrendingNews } from "@/store/slices/newsSlice";
@@ -15,6 +15,65 @@ const trendingKeywords = [
   "Selección",
   "Ecuador",
 ];
+
+// Optimized animation variants
+const fadeInVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (custom: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, delay: custom * 0.1 }
+  })
+};
+
+// Memoized article card component
+const ArticleCard = memo(({ article, index }: any) => (
+  <motion.div
+    key={article._id}
+    variants={fadeInVariants}
+    initial="hidden"
+    whileInView="visible"
+    viewport={{ once: true }}
+    custom={index}
+    className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 group"
+  >
+    <Link to={`/noticias/slug/${article.slug}`}>
+      <div className="relative">
+        <ResponsiveImage
+          src={
+            article.imageUrls?.[0] ||
+            "https://via.placeholder.com/600x400?text=Noticia"
+          }
+          alt={article.title}
+          width={600}
+          height={400}
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="w-full transition-transform duration-500 ease-in-out group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+        <div className="absolute bottom-0 left-0 p-4">
+          <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary text-white mb-2">
+            {article.category?.[0] || "Noticia"}
+          </span>
+          <h3 className="text-sm md:text-base font-bold text-white font-display">
+            {article.title}
+          </h3>
+          <div className="mt-2 flex items-center">
+            <span className="text-xs text-white/70">
+              {new Date(article.updatedAt).toLocaleDateString(
+                "es-ES",
+                {
+                  day: "numeric",
+                  month: "long",
+                }
+              )}
+            </span>
+          </div>
+        </div>
+      </div>
+    </Link>
+  </motion.div>
+));
 
 const FeaturedNews: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -57,21 +116,26 @@ const FeaturedNews: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* Main featured article */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          variants={fadeInVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          custom={0}
           className="lg:col-span-3 group rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800"
         >
           <Link to={`/noticias/slug/${featuredArticle.slug}`}>
             <div className="relative">
-              <LazyImage
+              <ResponsiveImage
                 src={
                   featuredArticle.imageUrls?.[0] ||
                   "https://via.placeholder.com/800x500?text=Noticia"
                 }
                 alt={featuredArticle.title}
-                aspectRatio="16/9"
-                className="w-full h-auto transition-transform duration-500 ease-in-out group-hover:scale-105"
+                width={800}
+                height={500}
+                priority={true}
+                sizes="(max-width: 768px) 100vw, 60vw"
+                className="w-full transition-transform duration-500 ease-in-out group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
               <div className="absolute bottom-0 left-0 p-6">
@@ -104,47 +168,7 @@ const FeaturedNews: React.FC = () => {
         {/* Other articles */}
         <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
           {otherArticles.map((article, index) => (
-            <motion.div
-              key={article._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 * index }}
-              className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 group"
-            >
-              <Link to={`/noticias/slug/${article.slug}`}>
-                <div className="relative">
-                  <LazyImage
-                    src={
-                      article.imageUrls?.[0] ||
-                      "https://via.placeholder.com/600x400?text=Noticia"
-                    }
-                    alt={article.title}
-                    aspectRatio="16/9"
-                    className="w-full h-auto transition-transform duration-500 ease-in-out group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                  <div className="absolute bottom-0 left-0 p-4">
-                    <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-primary text-white mb-2">
-                      {article.category?.[0] || "Noticia"}
-                    </span>
-                    <h3 className="text-sm md:text-base font-bold text-white font-display">
-                      {article.title}
-                    </h3>
-                    <div className="mt-2 flex items-center">
-                      <span className="text-xs text-white/70">
-                        {new Date(article.updatedAt).toLocaleDateString(
-                          "es-ES",
-                          {
-                            day: "numeric",
-                            month: "long",
-                          }
-                        )}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
+            <ArticleCard key={article._id} article={article} index={index + 1} />
           ))}
         </div>
       </div>
@@ -152,4 +176,4 @@ const FeaturedNews: React.FC = () => {
   );
 };
 
-export default FeaturedNews;
+export default memo(FeaturedNews);

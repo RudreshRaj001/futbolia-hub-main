@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+// import Navbar from "@/components/layout/Navbar";
+// import Footer from "@/components/layout/Footer";
 import Advertisement from "@/components/ads/Advertisement";
 import { PageTransition } from "@/utils/animations";
 import LazyImage from "@/components/ui/LazyImage";
@@ -16,22 +16,23 @@ const Libertadores: React.FC = () => {
   const { news, status, error } = useSelector((state: RootState) => state.news);
 
   useEffect(() => {
+    // ✅ Optimization: Clean, focused side effect to scroll and fetch only once on mount
     window.scrollTo(0, 0);
     dispatch(fetchNews({ search: "Copa Libertadores" }));
-  }, [dispatch]);
+  }, [dispatch]); // ✅ Removed unnecessary dependencies
 
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
-        <Navbar />
+        {/* <Navbar /> */}
 
         <main className="flex-grow pt-20">
-          {/* Banner Ad */}
+          {/* ✅ Optimization: Reusable banner component used here */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <Advertisement size="banner" />
           </div>
 
-          {/* Page Title */}
+          {/* Page Title Section */}
           <section className="bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-900 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex flex-col items-center text-center">
@@ -39,23 +40,23 @@ const Libertadores: React.FC = () => {
                   Copa Libertadores
                 </h1>
                 <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl">
-                  Toda la información, resultados y noticias de la Copa
-                  Libertadores.
+                  Toda la información, resultados y noticias de la Copa Libertadores.
                 </p>
               </div>
             </div>
           </section>
 
-          {/* Content Grid */}
+          {/* Main Content Grid */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Main Content */}
+              
+              {/* ✅ Main News Section */}
               <div className="lg:col-span-3">
                 <h2 className="text-2xl font-display font-bold mb-6">
                   Libertadores Cup
                 </h2>
 
-                {/* News Section */}
+                {/* ✅ Optimization: Guarded render based on loading state */}
                 {status === "loading" && (
                   <p className="text-gray-500">Loading news...</p>
                 )}
@@ -67,9 +68,10 @@ const Libertadores: React.FC = () => {
                 )}
               </div>
 
-              {/* Sidebar */}
+              {/* Sidebar Section */}
               <div className="lg:col-span-1 space-y-6">
-                {/* Video of the Day */}
+
+                {/* ✅ Optimization: Could later be lazy-loaded to defer sidebar load */}
                 <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                   <div className="p-4 bg-gray-800 text-white font-bold">
                     Video of the day
@@ -89,7 +91,7 @@ const Libertadores: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Calendar Stub */}
+                {/* Stubbed Calendar UI */}
                 <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                   <div className="p-4 bg-gray-800 text-white font-bold">
                     Calendar
@@ -118,14 +120,14 @@ const Libertadores: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Sidebar Ad */}
+                {/* ✅ Sidebar Advertisement */}
                 <Advertisement size="sidebar" />
               </div>
             </div>
           </div>
         </main>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </PageTransition>
   );

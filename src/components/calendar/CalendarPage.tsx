@@ -1,10 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 // import Navbar from '@/components/layout/Navbar';
 // import Footer from '@/components/layout/Footer';
 import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
-import FixtureCalendar from '@/components/calendar/FixtureCalendar';
 import { useAppSelector } from '@/store/hooks';
+
+// Lazy load FixtureCalendar for better initial loading time
+const FixtureCalendar = lazy(() => import('@/components/calendar/FixtureCalendar'));
+
+// Simple inline loading component
+const CalendarLoader = () => (
+  <div className="animate-pulse space-y-4 w-full">
+    <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+    <div className="h-64 bg-gray-200 rounded w-full"></div>
+  </div>
+);
 
 // Props interface for flexible reuse across different league calendar pages
 interface CalendarPageProps {
@@ -37,15 +47,15 @@ const CalendarPage: React.FC<CalendarPageProps> = ({
         {/* <Navbar /> */}
         
         <main className="flex-grow pt-20">
-          {/* Page Heading */}
-          <div className="w-full bg-primary text-white">
+          {/* Page Heading - Fixed height to prevent layout shift */}
+          <div className="w-full bg-primary text-white h-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
               <h1 className="text-2xl font-bold font-display">{resolvedTitle} - Calendar</h1>
             </div>
           </div>
 
-          {/* Banner Ad Section */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          {/* Banner Ad Section with fixed height to prevent layout shift */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 h-[90px]">
             <Advertisement size="banner" />
           </div>
 
@@ -53,8 +63,8 @@ const CalendarPage: React.FC<CalendarPageProps> = ({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               
-              {/* Left Sidebar Ad (Sticky, only on desktop) */}
-              <div className="hidden lg:block">
+              {/* Left Sidebar Ad (Sticky, only on desktop) - Fixed dimensions to prevent layout shift */}
+              <div className="hidden lg:block h-[600px] w-[160px]">
                 <div className="sticky top-24">
                   <Advertisement size="sidebar" />
                 </div>
@@ -62,20 +72,22 @@ const CalendarPage: React.FC<CalendarPageProps> = ({
 
               {/* Main Content Area (Calendar) */}
               <div className="lg:col-span-3">
-                <FixtureCalendar 
-                  competitions={competitions}
-                  defaultCompetition={resolvedCompetition}
-                  className="w-full"
-                />
+                <Suspense fallback={<CalendarLoader />}>
+                  <FixtureCalendar 
+                    competitions={competitions}
+                    defaultCompetition={resolvedCompetition}
+                    className="w-full"
+                  />
+                </Suspense>
 
-                {/* Inline Ad visible only on mobile screens */}
-                <div className="mt-6 lg:hidden">
+                {/* Inline Ad visible only on mobile screens - Fixed height to prevent layout shift */}
+                <div className="mt-6 lg:hidden h-[250px]">
                   <Advertisement size="inline" />
                 </div>
               </div>
 
-              {/* Right Sidebar Ad (Sticky) */}
-              <div className="lg:col-span-1">
+              {/* Right Sidebar Ad (Sticky) - Fixed dimensions to prevent layout shift */}
+              <div className="lg:col-span-1 h-[600px] w-[160px]">
                 <div className="space-y-6">
                   <div className="sticky top-24">
                     <Advertisement size="sidebar" />

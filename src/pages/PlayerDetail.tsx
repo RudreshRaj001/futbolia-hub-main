@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 // import Navbar from '@/components/layout/Navbar';
 // import Footer from '@/components/layout/Footer';
 import { PageTransition } from '@/utils/animations';
 import SEO from '@/utils/seo';
-import PlayerProfile from '@/components/players/PlayerProfile';
+// import PlayerProfile from '@/components/players/PlayerProfile';
+const PlayerProfile = lazy(() => import('@/components/players/PlayerProfile'));
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
@@ -159,8 +160,10 @@ const PlayerDetail: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {selectedPlayer && (
               <>
-                <PlayerProfile player={selectedPlayer} statistics={playerStats} />
-
+                {/* <PlayerProfile player={selectedPlayer} statistics={playerStats} /> */}
+                <Suspense fallback={<div className="text-center">Cargando perfil del jugador...</div>}>
+                  <PlayerProfile player={selectedPlayer} statistics={playerStats} />
+                </Suspense>
                 <div className="my-8">
                   <AdSection position="middle" />
                 </div>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Futbolia - Sitio del fútbol ecuatoriano con información actualizada sobre la LigaPro, Serie B, Copa Libertadores y Sudamericana." />
+  <title>Futbolia | El sitio del fútbol ecuatoriano</title>
+  
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/logo1.png" as="image" type="image/png" />
+  <link rel="preload" href="/assets/index-critical.css" as="style" />
+  <link rel="preload" href="/assets/index-critical.js" as="script" />
+  
+  <!-- Critical CSS inline -->
+  <style>
+    /* Inline critical styles to avoid render blocking */
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --primary: 221.2 83.2% 53.3%;
+      --primary-foreground: 210 40% 98%;
+    }
+    
+    .bg-primary {
+      background-color: hsl(var(--primary));
+    }
+    
+    .text-white {
+      color: white;
+    }
+    
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: .5;
+      }
+    }
+    
+    /* Initial loading animation */
+    .initial-loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: white;
+      z-index: 9999;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-left-color: hsl(221.2, 83.2%, 53.3%);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+  </style>
+  
+  <!-- Defer non-critical CSS -->
+  <link rel="stylesheet" href="/assets/index.css" media="print" onload="this.media='all'" />
+</head>
+<body>
+  <div id="root">
+    <!-- Initial loading animation until React loads -->
+    <div class="initial-loader">
+      <div class="spinner"></div>
+    </div>
+  </div>
+  
+  <!-- Initialize performance measurement -->
+  <script>
+    // Record timing for performance analysis
+    window.perfMetrics = {
+      startTime: performance.now(),
+      firstPaint: 0,
+      firstContentfulPaint: 0,
+      loadComplete: 0
+    };
+    
+    // Mark initial load start
+    performance.mark('app:start');
+    
+    // Capture paint metrics
+    const observer = new PerformanceObserver((list) => {
+      for (const entry of list.getEntries()) {
+        if (entry.name === 'first-paint') {
+          window.perfMetrics.firstPaint = entry.startTime;
+        } else if (entry.name === 'first-contentful-paint') {
+          window.perfMetrics.firstContentfulPaint = entry.startTime;
+        }
+      }
+    });
+    observer.observe({ entryTypes: ['paint'] });
+  </script>
+  
+  <!-- Main app bundle with module/nomodule pattern for better browser support -->
+  <script type="module" src="/assets/index.js"></script>
+  <script nomodule src="/assets/index-legacy.js"></script>
+  
+  <!-- Load non-critical scripts after page load -->
+  <script>
+    window.addEventListener('load', () => {
+      // Record load complete time
+      window.perfMetrics.loadComplete = performance.now() - window.perfMetrics.startTime;
+      performance.mark('app:loaded');
+      performance.measure('app:loading', 'app:start', 'app:loaded');
+      
+      // Load analytics or other non-critical scripts
+      const analyticsScript = document.createElement('script');
+      analyticsScript.src = '/assets/analytics.js';
+      analyticsScript.defer = true;
+      document.body.appendChild(analyticsScript);
+    });
+  </script>
+</body>
+</html> 

@@ -1,24 +1,92 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pase y GOL - Noticias y Estadísticas de Fútbol</title>
-    <meta name="description" content="Portal completo de noticias y estadísticas del fútbol ecuatoriano e internacional. Resultados, posiciones, fichajes y más." />
-    <meta name="author" content="Pase y GOL" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+    <meta name="description" content="Futbolia Hub - Noticias e información del fútbol ecuatoriano" />
+    <meta name="theme-color" content="#ed1909" />
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=SF+Pro+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Preload critical fonts -->
+    <link rel="preload" as="font" href="/fonts/inter-var.woff2" type="font/woff2" crossorigin />
+    
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="/assets/index.css" as="style" />
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    
+    <!-- DNS prefetch -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Title -->
+    <title>Futbolia Hub</title>
+    
+    <!-- Prevent render blocking -->
+    <style>
+      /* Critical CSS for initial render */
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        color: #333;
+      }
+      
+      /* Prevent content layout shift */
+      .prevent-cls {
+        content-visibility: auto;
+        contain-intrinsic-size: 0 500px;
+      }
+      
+      /* Skeleton loading animation */
+      @keyframes pulse {
+        0% { opacity: 0.6; }
+        50% { opacity: 1; }
+        100% { opacity: 0.6; }
+      }
+      
+      .skeleton {
+        animation: pulse 1.5s ease-in-out infinite;
+        background-color: #eee;
+        border-radius: 4px;
+      }
+    </style>
   </head>
-
   <body>
     <div id="root"></div>
-    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    
+    <!-- Add a loading state that will be replaced by React -->
+    <div id="initial-loading" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center;">
+      <div style="text-align: center;">
+        <div class="skeleton" style="width: 200px; height: 50px; margin-bottom: 20px;"></div>
+        <div class="skeleton" style="width: 300px; height: 20px; margin-bottom: 10px;"></div>
+        <div class="skeleton" style="width: 250px; height: 20px;"></div>
+      </div>
+    </div>
+    
+    <script>
+      // Remove loading indicator when app loads
+      window.addEventListener('load', function() {
+        const loadingEl = document.getElementById('initial-loading');
+        if (loadingEl) {
+          loadingEl.style.display = 'none';
+        }
+      });
+      
+      // Add performance mark for measuring initial load time
+      performance.mark('app-start');
+    </script>
+    
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Avoid render-blocking resources by loading non-critical scripts with defer -->
+    <script defer src="https://cdn.jsdelivr.net/npm/focus-visible@5.2.0/dist/focus-visible.min.js"></script>
   </body>
 </html>

@@ -1,76 +1,83 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 // import Navbar from "@/components/layout/Navbar";
 // import Footer from "@/components/layout/Footer";
 import { PageTransition } from "@/utils/animations";
 import { AdSection } from "@/components/home/AdSections";
-// import { Separator } from "@/components/ui/separator";
-// import LazyImage from "@/components/ui/LazyImage";
-// import PlayerSigningCard from "@/components/signings/PlayerSigningCard";
-import LatestSignings from "@/components/signings/LatestSignings";
-import VideoSection from "@/components/signings/VideoSection";
-import TeamTransfers from "@/components/signings/TeamTransfers";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { fetchNews } from "@/store/slices/newsSlice";
-import NewsList from "@/components/abroad/NewsList";
+
+// ✅ Lazy-loaded components
+const NewsList = lazy(() => import("@/components/abroad/NewsList"));
+const LatestSignings = lazy(() => import("@/components/signings/LatestSignings"));
+const TeamTransfers = lazy(() => import("@/components/signings/TeamTransfers"));
+const VideoSection = lazy(() => import("@/components/signings/VideoSection"));
+
 const Signings: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { news, status, error } = useSelector((state: RootState) => state.news);
 
   useEffect(() => {
+    // ✅ Single mount effect for fetch and scroll
+    window.scrollTo(0, 0);
     dispatch(fetchNews({ search: "Fichajes" }));
   }, [dispatch]);
-  useEffect(() => {
-    // Scroll to top when component mounts
-    window.scrollTo(0, 0);
-  }, []);
 
   return (
     <PageTransition>
       <div className="min-h-screen flex flex-col">
         {/* <Navbar /> */}
 
-        <main className="flex-grow  pt-20">
+        <main className="flex-grow pt-20">
           {/* Top Banner Advertisement */}
           <AdSection position="top" />
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Main Content Area (2/3 width on desktop) */}
+              
+              {/* Main Content */}
               <div className="lg:col-span-2 space-y-8">
-                {/* Header Section */}
+
+                {/* Page Title */}
                 <div className="bg-primary text-white p-6">
                   <h1 className="text-2xl md:text-3xl font-bold">
                     LigaPro 2025 Signings
                   </h1>
                 </div>
 
-                {/* Introduction Text */}
+                {/* Introduction */}
                 <div className="bg-white p-6 shadow-sm">
                   <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">
-                    Learn about the additions and departures of the LigaPro
-                    Serie A for 2025.
+                    Learn about the additions and departures of the LigaPro Serie A for 2025.
                   </h2>
                 </div>
 
                 {/* Featured Signing */}
                 <div className="relative">
-                  <NewsList news={news.slice(0, 1)} />
+                  <Suspense fallback={<div className="text-gray-500">Loading featured signing...</div>}>
+                    {status === "succeeded" && <NewsList news={news.slice(0, 1)} />}
+                    {status === "loading" && <p className="text-gray-500">Loading news...</p>}
+                    {status === "failed" && <p className="text-red-500">Error: {error}</p>}
+                  </Suspense>
                 </div>
 
-                {/* Team Transfer Insights */}
-                <TeamTransfers />
+                {/* Team Transfers */}
+                <Suspense fallback={<div className="text-gray-500">Loading team transfers...</div>}>
+                  <TeamTransfers />
+                </Suspense>
 
-                {/* Latest Signings Grid */}
-                <LatestSignings />
+                {/* Latest Signings */}
+                <Suspense fallback={<div className="text-gray-500">Loading signings...</div>}>
+                  <LatestSignings />
+                </Suspense>
 
-                {/* Middle Ad Section */}
+                {/* Middle Ad */}
                 <AdSection position="middle" />
               </div>
 
-              {/* Sidebar Area (1/3 width on desktop) */}
+              {/* Sidebar */}
               <div className="space-y-8">
-                {/* Advertisement */}
+                {/* Ad */}
                 <div className="bg-gray-100 p-4 rounded-md">
                   <div className="bg-white rounded-md overflow-hidden">
                     <img
@@ -81,10 +88,12 @@ const Signings: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Video of the day section */}
-                <VideoSection />
+                {/* Video Section */}
+                <Suspense fallback={<div className="text-gray-500">Loading video...</div>}>
+                  <VideoSection />
+                </Suspense>
 
-                {/* Another Advertisement */}
+                {/* Ad */}
                 <div className="bg-gray-100 p-4 rounded-md">
                   <div className="bg-white rounded-md overflow-hidden">
                     <img

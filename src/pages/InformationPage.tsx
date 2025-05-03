@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 // import Navbar from '@/components/layout/Navbar';
 // import Footer from '@/components/layout/Footer';
@@ -174,7 +174,10 @@ const InformationPage: React.FC<InformationPageProps> = ({ pageId: propPageId })
     }
   };
 
-  const currentPage = pageContent[pageId as keyof typeof pageContent] || pageContent.informacion;
+  // const currentPage = pageContent[pageId as keyof typeof pageContent] || pageContent.informacion;
+  const currentPage = useMemo(() => {
+    return pageContent[activePageId as keyof typeof pageContent] ?? pageContent.informacion;
+  }, [activePageId]);
 
   return (
     <PageTransition>

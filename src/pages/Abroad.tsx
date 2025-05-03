@@ -1,25 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 // import Navbar from '@/components/layout/Navbar';
 // import Footer from '@/components/layout/Footer';
 import Advertisement from '@/components/ads/Advertisement';
 import { PageTransition } from '@/utils/animations';
-import FixtureCalendar from '@/components/calendar/FixtureCalendar';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { useIsMobile } from '@/hooks/use-mobile';
-import NewsList from '@/components/abroad/NewsList';
-import VideoSection from '@/components/abroad/VideoSection';
-import StandingsTable from '@/components/abroad/StandingsTable';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchNews } from '@/store/slices/newsSlice';
 import { fetchTournaments, fetchTournamentStandings } from '@/store/slices/tournamentsSlice';
+
+// ✅ Lazy-loaded components for performance
+const NewsList = lazy(() => import('@/components/abroad/NewsList'));
+const VideoSection = lazy(() => import('@/components/abroad/VideoSection'));
+const FixtureCalendar = lazy(() => import('@/components/calendar/FixtureCalendar'));
+const StandingsTable = lazy(() => import('@/components/abroad/StandingsTable'));
 
 const Abroad: React.FC = () => {
   const dispatch = useAppDispatch();
   const tournaments = useAppSelector((state) => state.tournaments.tournaments);
   const standings = useAppSelector((state) => state.tournaments.standings);
   const { news, status, error } = useAppSelector((state) => state.news);
-  const [activeTab, setActiveTab] = useState<string>('242'); // Default tab (Liga Pro Serie A)
-  const [season, setSeason] = useState<any>(2025); // Default season
+  const [activeTab, setActiveTab] = useState<string>('242');
+  const [season, setSeason] = useState<number>(2025);
 
   const isMobile = useIsMobile();
 
@@ -30,19 +32,18 @@ const Abroad: React.FC = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (activeTab) {
-       dispatch(fetchTournamentStandings({ tournamentId: activeTab, season: season }))
+    if (activeTab && season) {
+      dispatch(fetchTournamentStandings({ tournamentId: activeTab, season }));
     }
-  }, [activeTab, dispatch]);
+  }, [activeTab, season, dispatch]);
 
-  // Map the API standings data to the expected TeamStanding format
   const mappedStandings = standings.map((team) => ({
     position: team.position,
     name: team.team.name,
     logo: team.team.logo,
     played: team.played,
     points: team.points,
-    goalDiff: team.goalsDiff ,
+    goalDiff: team.goalsDiff,
     id: team.team.id,
   }));
 
@@ -52,43 +53,45 @@ const Abroad: React.FC = () => {
         {/* <Navbar /> */}
 
         <main className="flex-grow pt-20">
-          {/* Banner Ad */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <Advertisement size="banner" />
           </div>
 
-          {/* Page Header */}
           <div className="bg-primary text-white py-3 mb-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <h1 className="text-xl sm:text-2xl font-bold">Abroad</h1>
             </div>
           </div>
 
-          {/* Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Main Content - 3/4 width on desktop */}
+              
+              {/* Main Content */}
               <div className="lg:col-span-3">
                 {status === "loading" && <p className="text-gray-500">Loading news...</p>}
                 {status === "failed" && <p className="text-red-500">Error: {error}</p>}
-                {status === "succeeded" && <NewsList news={news} />}
+                {status === "succeeded" && (
+                  <Suspense fallback={<div>Cargando noticias...</div>}>
+                    <NewsList news={news} />
+                  </Suspense>
+                )}
               </div>
 
-              {/* Sidebar - 1/4 width on desktop */}
+              {/* Sidebar */}
               <div className="lg:col-span-1 space-y-6">
-                {/* Video Section */}
-                <VideoSection
-                  imageUrl="/lovable-uploads/dcb5d46b-94a1-45fa-905c-3fdc4939949d.png"
-                  title="Video of the day"
-                />
+                <Suspense fallback={<div>Loading video...</div>}>
+                  <VideoSection
+                    imageUrl="/lovable-uploads/dcb5d46b-94a1-45fa-905c-3fdc4939949d.png"
+                    title="Video of the day"
+                  />
+                </Suspense>
 
                 {!isMobile && (
                   <Card>
-                    {/* <CardHeader className="bg-gray-800 text-white py-3 px-4">
-                      <h3 className="font-bold">Calendar</h3>
-                    </CardHeader> */}
                     <CardContent className="p-0">
-                    <FixtureCalendar className="h-full" />
+                      <Suspense fallback={<div className="p-4">Loading calendar...</div>}>
+                        <FixtureCalendar className="h-full" />
+                      </Suspense>
                     </CardContent>
                   </Card>
                 )}
@@ -102,10 +105,10 @@ const Abroad: React.FC = () => {
                       {tournaments.map((tournament) => (
                         <button
                           key={tournament.id}
-                          onClick={() =>{
-                            setActiveTab(tournament.id.toString())
-                            setSeason(tournament.season); // Update the season based on the selected tournament
-                          } }
+                          onClick={() => {
+                            setActiveTab(tournament.id.toString());
+                            setSeason(tournament.season);
+                          }}
                           className={`${
                             activeTab === tournament.id.toString()
                               ? 'bg-primary text-white'
@@ -116,7 +119,9 @@ const Abroad: React.FC = () => {
                         </button>
                       ))}
                     </div>
-                    <StandingsTable standings={mappedStandings} />
+                    <Suspense fallback={<div className="p-4">Loading standings...</div>}>
+                      <StandingsTable standings={mappedStandings} />
+                    </Suspense>
                   </CardContent>
                 </Card>
 

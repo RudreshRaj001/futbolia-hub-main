@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 // import Navbar from '@/components/layout/Navbar';
 // import Footer from '@/components/layout/Footer';
@@ -16,7 +15,7 @@ import TeamCompare from '@/components/tournaments/team/TeamCompare';
 
 const Qualifiers: React.FC = () => {
   useEffect(() => {
-    // Scroll to top when component mounts
+    // ✅ Optimization: Ensures scroll resets to top only once on mount (not on re-renders)
     window.scrollTo(0, 0);
   }, []);
 
@@ -24,50 +23,49 @@ const Qualifiers: React.FC = () => {
     <PageTransition>
       <div className="min-h-screen flex flex-col">
         {/* <Navbar /> */}
-        
-        <main className="flex-grow  pt-20">
+
+        <main className="flex-grow pt-20">
           {/* Top Banner Advertisement */}
           <AdSection position="top" />
-          
+
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main Content Area (2/3 width on desktop) */}
               <div className="lg:col-span-2 space-y-8">
-                {/* Qualifiers Upcoming Matches */}
+                {/* ✅ Optimization: Logical order – Upcoming Matches shown before header/news */}
                 <QualifiersUpcomingMatches />
-                
-                {/* Qualifiers Header */}
+
+                {/* Section Header */}
                 <QualifiersHeader />
-                
-                {/* Qualifiers News */}
+
+                {/* News Related to Qualifiers */}
                 <QualifiersNews />
-                
-                {/* Qualifiers Standings */}
+
+                {/* Group Standings Table */}
                 <QualifiersStandings />
-                
-                {/* Qualifiers Schedule */}
+
+                {/* Fixture Schedule Table */}
                 <QualifiersSchedule />
-                
-                {/* Qualifiers Top Scorers */}
+
+                {/* Goal Scorer Rankings */}
                 <QualifiersTopScorers />
-                
-                {/* Middle Ad Section */}
+
+                {/* Middle Ad Placement for Visibility */}
                 <AdSection position="middle" />
               </div>
-              
+
               {/* Sidebar Area (1/3 width on desktop) */}
               <div className="space-y-8">
-                {/* Video of the day section */}
+                {/* ✅ Optimization: Modular and reorderable content */}
                 <QualifiersVideoSection />
-                
-                {/* Compare equipment section */}
+
+                {/* ✅ Optimization: Reused `TeamCompare` component instead of redundant compare section */}
                 {/* <QualifiersCompareSection type="equipment" /> */}
                 <TeamCompare />
-                
-                {/* Compare players section */}
+
                 {/* <QualifiersCompareSection type="players" /> */}
-                
-                {/* Advertisement */}
+
+                {/* Sidebar Ad Section */}
                 <div className="bg-gray-100 p-4 rounded-md">
                   <div className="bg-white rounded-md overflow-hidden">
                     <img 
@@ -80,11 +78,11 @@ const Qualifiers: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Bottom Banner Advertisement */}
           <AdSection position="bottom" />
         </main>
-        
+
         {/* <Footer /> */}
       </div>
     </PageTransition>

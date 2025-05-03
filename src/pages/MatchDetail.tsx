@@ -1,8 +1,6 @@
-// MatchDetail.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, lazy, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 // import Navbar from '@/components/layout/Navbar';
 // import Footer from '@/components/layout/Footer';
 import { PageTransition } from '@/utils/animations';
@@ -13,12 +11,15 @@ import { Badge } from '@/components/ui/badge';
 import LazyImage from '@/components/ui/LazyImage';
 import { Calendar, Clock, MapPin, Users } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { AdSection } from '@/components/home/AdSections';
 import { AppDispatch, RootState } from '@/store';
 import { fetchMatch } from '@/store/slices/matchSlice';
-import MatchEvents from './MatchEvents';
-import TeamLineup from './TeamLineup';
-import MatchStatistics from './MatchStatistics';
+
+// ✅ Lazy-loaded components
+const MatchEvents = lazy(() => import('./MatchEvents'));
+const TeamLineup = lazy(() => import('./TeamLineup'));
+const MatchStatistics = lazy(() => import('./MatchStatistics'));
+// const AdSection = lazy(() => import('@/components/home/AdSections'));
+import { AdSection } from '@/components/home/AdSections';
 
 const MatchDetail: React.FC = () => {
   const { matchId } = useParams<{ matchId: string }>();
@@ -26,10 +27,7 @@ const MatchDetail: React.FC = () => {
   const { match, loading, error } = useSelector((state: RootState) => state.match);
   const { toast } = useToast();
 
-  console.log("check match data", match);
-
   useEffect(() => {
-    // Scroll to top on component mount.
     window.scrollTo(0, 0);
     if (matchId) {
       dispatch(fetchMatch(matchId));
@@ -77,7 +75,6 @@ const MatchDetail: React.FC = () => {
                 </Badge>
               </div>
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10">
-                {/* Home Team */}
                 <div className="flex flex-col items-center text-center">
                   <div className="w-20 h-20 mb-2">
                     <LazyImage 
@@ -88,7 +85,6 @@ const MatchDetail: React.FC = () => {
                   </div>
                   <h3 className="text-lg font-bold">{match?.fixture.teams?.home?.name}</h3>
                 </div>
-                {/* Score and Match Details */}
                 <div className="flex flex-col items-center">
                   <div className="text-3xl font-bold mb-1">
                     {match?.fixture.goals?.home} - {match?.fixture.goals?.away}
@@ -101,13 +97,10 @@ const MatchDetail: React.FC = () => {
                   </Badge>
                   <div className="text-sm text-gray-500 dark:text-gray-400">
                     {new Date(match.fixture?.fixture?.date).toLocaleDateString('es-ES', { 
-                      day: 'numeric', 
-                      month: 'long', 
-                      year: 'numeric' 
+                      day: 'numeric', month: 'long', year: 'numeric' 
                     })}
                   </div>
                 </div>
-                {/* Away Team */}
                 <div className="flex flex-col items-center text-center">
                   <div className="w-20 h-20 mb-2">
                     <LazyImage 
@@ -119,15 +112,13 @@ const MatchDetail: React.FC = () => {
                   <h3 className="text-lg font-bold">{match.fixture?.teams?.away?.name}</h3>
                 </div>
               </div>
-              {/* Additional Match Info */}
+
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
                 <div className="flex items-center justify-center gap-2">
                   <Calendar className="h-5 w-5 text-gray-400" />
                   <span className="text-sm">
                     {new Date(match.fixture?.fixture?.date).toLocaleDateString('es-ES', {
-                      day: 'numeric',
-                      month: 'long',
-                      year: 'numeric'
+                      day: 'numeric', month: 'long', year: 'numeric'
                     })}
                   </span>
                 </div>
@@ -135,8 +126,7 @@ const MatchDetail: React.FC = () => {
                   <Clock className="h-5 w-5 text-gray-400" />
                   <span className="text-sm">
                     {new Date(match.fixture?.fixture?.date).toLocaleTimeString('es-ES', {
-                      hour: '2-digit',
-                      minute: '2-digit'
+                      hour: '2-digit', minute: '2-digit'
                     })}
                   </span>
                 </div>
@@ -150,7 +140,7 @@ const MatchDetail: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Tabs for Events, Lineups, and Statistics */}
             <Tabs defaultValue="events" className="mt-8">
               <TabsList className="w-full max-w-md mx-auto grid grid-cols-3 mb-8">
@@ -158,24 +148,31 @@ const MatchDetail: React.FC = () => {
                 <TabsTrigger value="lineups">Alineaciones</TabsTrigger>
                 <TabsTrigger value="stats">Estadísticas</TabsTrigger>
               </TabsList>
-              
+
               <TabsContent value="events">
-                <MatchEvents events={match.events || []} />
+                <Suspense fallback={<div className="text-center py-4">Cargando eventos...</div>}>
+                  <MatchEvents events={match.events || []} />
+                </Suspense>
               </TabsContent>
-              
+
               <TabsContent value="lineups">
-                {/* Pass a default empty array if lineups not present */}
-                <TeamLineup lineups={match.lineups || []} />
+                <Suspense fallback={<div className="text-center py-4">Cargando alineaciones...</div>}>
+                  <TeamLineup lineups={match.lineups || []} />
+                </Suspense>
               </TabsContent>
-              
+
               <TabsContent value="stats">
-                <MatchStatistics statistics={match.statistics || []} />
+                <Suspense fallback={<div className="text-center py-4">Cargando estadísticas...</div>}>
+                  <MatchStatistics statistics={match.statistics || []} />
+                </Suspense>
               </TabsContent>
             </Tabs>
-            
+
             {/* Ad Section */}
             <div className="my-8">
-              <AdSection position="middle" />
+              <Suspense fallback={<div className="text-center">Cargando anuncio...</div>}>
+                <AdSection position="middle" />
+              </Suspense>
             </div>
           </div>
         </main>

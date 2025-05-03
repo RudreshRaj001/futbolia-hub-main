@@ -1,6 +1,6 @@
 import React, { useEffect, Suspense, lazy } from "react";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+// import Navbar from "@/components/layout/Navbar";
+// import Footer from "@/components/layout/Footer";
 import ImageSlider from "@/components/home/ImageSlider";
 import WelcomeSection from "@/components/home/WelcomeSection";
 import { PageTransition } from "@/utils/animations";

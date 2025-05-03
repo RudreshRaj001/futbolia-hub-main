@@ -1,23 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense, lazy } from "react";
 // import Navbar from "@/components/layout/Navbar";
 // import Footer from "@/components/layout/Footer";
 import Advertisement from "@/components/ads/Advertisement";
 import { PageTransition } from "@/utils/animations";
 import SudamericanaHeader from "@/components/sudamericana/SudamericanaHeader";
 import MatchResults from "@/components/sudamericana/MatchResults";
-import SidebarContent from "@/components/sudamericana/SidebarContent";
 import NewsList from "@/components/abroad/NewsList";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchNews } from "@/store/slices/newsSlice";
+
+// ✅ Optimization: Lazy-load sidebar to reduce initial JS bundle
+const SidebarContent = lazy(() => import("@/components/sudamericana/SidebarContent"));
 
 const Sudamericana: React.FC = () => {
   const dispatch = useAppDispatch();
   const { news, status, error } = useAppSelector((state) => state.news);
 
   useEffect(() => {
+    // ✅ Optimization: Ensure scroll-to-top and fetch only happen once
     window.scrollTo(0, 0);
     dispatch(fetchNews({ search: "Copa Sudamericana" }));
-  }, [dispatch]);
+  }, [dispatch]); // Clean dependency array
 
   return (
     <PageTransition>
@@ -36,16 +39,17 @@ const Sudamericana: React.FC = () => {
           {/* Page Content */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Main Content */}
+              
+              {/* Main Content Area */}
               <div className="lg:col-span-3">
-                {/* Match Results Placeholder */}
+                {/* ✅ Optimization: Component-safe placeholder with empty array */}
                 <MatchResults matches={[]} />
 
                 <h2 className="text-2xl font-display font-bold mb-6">
                   Copa Sudamericana News
                 </h2>
 
-                {/* News Rendering */}
+                {/* ✅ Optimization: Render logic scoped by status */}
                 {status === "loading" && (
                   <p className="text-gray-500">Loading news...</p>
                 )}
@@ -57,8 +61,12 @@ const Sudamericana: React.FC = () => {
                 )}
               </div>
 
-              {/* Sidebar */}
-              <SidebarContent />
+              {/* ✅ Sidebar: Now lazily loaded with fallback */}
+              <div className="lg:col-span-1">
+                <Suspense fallback={<div>Loading sidebar...</div>}>
+                  <SidebarContent />
+                </Suspense>
+              </div>
             </div>
           </div>
         </main>

@@ -1,12 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { useParams } from "react-router-dom";
 // import Navbar from "@/components/layout/Navbar";
 // import Footer from "@/components/layout/Footer";
 import { PageTransition } from "@/utils/animations";
-import LazyImage from "@/components/ui/LazyImage";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { fetchNews } from "@/store/slices/newsSlice";
+
+// ✅ Lazy-load image and Twitter embed
+const LazyImage = lazy(() => import("@/components/ui/LazyImage"));
+// const TwitterNews = lazy(() => import("../TwitterNews"));
 import { TwitterNews } from "../TwitterNews";
+
 
 const NewsDetail: React.FC = () => {
   const { newsSlug } = useParams<{ newsSlug: string }>();
@@ -14,7 +18,9 @@ const NewsDetail: React.FC = () => {
   const { news, status, error } = useAppSelector((state) => state.news);
 
   useEffect(() => {
-    if (status === "idle") {
+    // ✅ Only fetch if not already done and scroll to top
+    window.scrollTo(0, 0);
+    if (status === "idle" && newsSlug) {
       dispatch(fetchNews({ slug: newsSlug }));
     }
   }, [dispatch, newsSlug, status]);
@@ -70,11 +76,13 @@ const NewsDetail: React.FC = () => {
             </div>
 
             {article.imageUrls?.[0] && (
-              <LazyImage
-                src={article.imageUrls[0]}
-                alt={article.title}
-                className="w-full rounded-lg"
-              />
+              <Suspense fallback={<div>Loading image...</div>}>
+                <LazyImage
+                  src={article.imageUrls[0]}
+                  alt={article.title}
+                  className="w-full rounded-lg"
+                />
+              </Suspense>
             )}
 
             <section className="prose dark:prose-invert max-w-none">
@@ -85,16 +93,7 @@ const NewsDetail: React.FC = () => {
             </section>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-              {/* <div>
-                <h3 className="font-semibold text-gray-700">League Info</h3>
-                <p>
-                  <strong>League Name:</strong> {article.leagueName || "N/A"}
-                </p>
-                <p>
-                  <strong>League ID:</strong> {article.leagueId || "N/A"}
-                </p>
-              </div> */}
-
+              {/* League info removed for now */}
               <div>
                 <h3 className="font-semibold text-gray-700">Keywords</h3>
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -124,11 +123,14 @@ const NewsDetail: React.FC = () => {
               </div>
             </div>
           </div>
-          <TwitterNews />
+
+          {/* ✅ Lazy Twitter embeds */}
+          <Suspense fallback={<div className="text-center text-sm py-6">Loading Twitter feed...</div>}>
+            <TwitterNews />
+          </Suspense>
         </main>
         {/* <Footer /> */}
       </div>
-    
     </PageTransition>
   );
 };
